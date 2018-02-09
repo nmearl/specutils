@@ -5,7 +5,7 @@ from astropy import units as u
 from astropy.nddata import NDDataRef
 from astropy.utils.decorators import lazyproperty
 
-from ..wcs import WCSWrapper
+from ..wcs import WCSWrapper, WCSAdapter
 from .spectrum_mixin import OneDSpectrumMixin
 
 __all__ = ['Spectrum1D']
@@ -18,10 +18,18 @@ class Spectrum1D(OneDSpectrumMixin, NDDataRef):
 
     def __init__(self, flux, spectral_axis=None, wcs=None, unit=None,
                  spectral_axis_unit=None, *args, **kwargs):
-        # Attempt to parse the WCS. If not WCS object is given, try instead to
+        # If a `Spectrum1D` object is used to initialize (as in the case of
+        # astropy's `NDData` arithmetic operations), copy instance attributes
+        print("Input data is of type: '{}'".format(type(flux)))
+        if issubclass(flux.__class__, Spectrum1D):
+            spectral_axis = flux.spectral_axis
+            wcs = flux.wcs.wcs
+            flux = flux.flux
+
+        # Attempt to parse the WCS. If no WCS object is given, try instead to
         # parse a given wavelength array. This is put into a GWCS object to
         # then be used behind-the-scenes for all specutils operations.
-        if wcs is not None:
+        if wcs is not None and not issubclass(wcs.__class__, WCSAdapter):
             wcs = WCSWrapper(wcs)
         elif spectral_axis is not None:
             spectral_axis = u.Quantity(spectral_axis,
@@ -29,7 +37,7 @@ class Spectrum1D(OneDSpectrumMixin, NDDataRef):
 
             wcs = WCSWrapper.from_array(spectral_axis)
         else:
-            # If not wcs and not spectral axis has been given, raise an error
+            # If no wcs and no spectral axis has been given, raise an error
             raise LookupError("No WCS object or spectral axis information has "
                               "been given. Please provide one.")
 
@@ -181,3 +189,18 @@ class Spectrum1D(OneDSpectrumMixin, NDDataRef):
             shape is the result of broadcasting the input shapes.
         """
         pass
+
+    def _arithmetic_data(self, operation, operand, **kwds):
+        pass
+
+    def __add__(self, other):
+        return self.add(other)
+
+    def __sub__(self, other):
+        return self.subtract(other)
+
+    def __divmod__(self, other):
+        return self.divide(other)
+
+    def __mul__(self, other):
+        return self.multiply(other)
