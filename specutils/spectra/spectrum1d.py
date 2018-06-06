@@ -7,6 +7,7 @@ from astropy.utils.decorators import lazyproperty
 from astropy.nddata import NDUncertainty
 from ..wcs import WCSWrapper, WCSAdapter
 from .spectrum_mixin import OneDSpectrumMixin
+from ..analysis.resample import Resample
 
 __all__ = ['Spectrum1D']
 
@@ -191,6 +192,23 @@ class Spectrum1D(OneDSpectrumMixin, NDDataRef):
     def __truediv__(self, other):
         return self.divide(
             other, compare_wcs=lambda o1, o2: self._compare_wcs(self, other))
+
+    def resample(self, new_grid):
+        """
+        Resample spectrum onto a new spectral axis grid.
+
+        Parameters
+        ----------
+        new_grid : :class:`~astropy.units.Quantity`
+            The new grid to resample the `Spectrum1D` object to.
+        """
+        y = Resample(new_grid)(self.spectral_axis, self.flux)
+
+        # Preserve flux unit information
+        y = u.Quantity(y.value, self.unit)
+
+        return Spectrum1D(flux=y, spectral_axis=new_grid,
+                          spectral_axis_unit=self.wcs.spectral_axis_unit)
 
     def spectral_resolution(self, true_dispersion, delta_dispersion, axis=-1):
         """Evaluate the probability distribution of the spectral resolution.
