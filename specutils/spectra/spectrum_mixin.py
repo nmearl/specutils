@@ -12,6 +12,8 @@ DOPPLER_CONVENTIONS['radio'] = u.doppler_radio
 DOPPLER_CONVENTIONS['optical'] = u.doppler_optical
 DOPPLER_CONVENTIONS['relativistic'] = u.doppler_relativistic
 
+__all__ = ['OneDSpectrumMixin']
+
 
 class OneDSpectrumMixin(object):
     @property
@@ -63,13 +65,20 @@ class OneDSpectrumMixin(object):
         return spectral_axis
 
     @property
+    def spectral_axis_unit(self):
+        """
+        Returns the units of the spectral axis.
+        """
+        return self.wcs.spectral_axis_unit
+
+    @property
     def flux(self):
         """
         Converts the stored data and unit information into a quantity.
 
         Returns
         -------
-        ~`astropy.units.Quantity`
+        `~astropy.units.Quantity`
             Spectral data as a quantity.
         """
         return u.Quantity(self.data, unit=self.unit)
@@ -80,7 +89,7 @@ class OneDSpectrumMixin(object):
 
         Parameters
         ----------
-        unit : str or ~`astropy.units.Unit`
+        unit : str or `~astropy.units.Unit`
             The unit to conver the flux array to.
 
         equivalencies : list of equivalencies
@@ -93,7 +102,7 @@ class OneDSpectrumMixin(object):
 
         Returns
         -------
-        ~`astropy.units.Quantity`
+        `~astropy.units.Quantity`
             The converted flux array.
         """
         if not suppress_conversion:
