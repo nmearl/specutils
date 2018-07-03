@@ -2,6 +2,7 @@ import numpy as np
 from .spectrum1d import Spectrum1D
 from astropy.units import Quantity
 from collections import MutableSequence
+from astropy.nddata import NDIOMixin
 
 
 class SpectrumArray(MutableSequence):
@@ -78,7 +79,7 @@ class ResampleMixin:
         return (len(self._items), self.output_grid.size)
 
 
-class SpectrumCollection(SpectrumArray, ResampleMixin):
+class SpectrumCollection(SpectrumArray, ResampleMixin, NDIOMixin):
     """
     A container class for spectra which themselves do not share a single
     dispersion solution. :class:`~specutils.Spectrum1D` objects added to this
