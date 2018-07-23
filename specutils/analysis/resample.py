@@ -42,12 +42,17 @@ def resample(orig_lamb, fin_lamb, unit=None, force=None, **kwargs):
     resample_mat : ndarray
         The resampling matrix to be applied to data arrays.
     """
+    # Ensure the input and output dispersions are the same unit
+    with u.set_enabled_equivalencies(u.equivalencies.spectral()):
+        orig_lamb = u.Quantity(orig_lamb, unit=unit)
+        fin_lamb = u.Quantity(fin_lamb, unit=unit)
 
-    orig_lamb = u.Quantity(orig_lamb, unit=unit)
-    fin_lamb = u.Quantity(fin_lamb, unit=unit)
+        orig_lamb = orig_lamb.to(fin_lamb.unit)
 
-    orig_space = (orig_lamb[1:] - orig_lamb[:-1]).value
-    fin_space = (fin_lamb[1:] - fin_lamb[:-1]).value
+    orig_lamb, fin_lamb = orig_lamb.value, fin_lamb.value
+
+    orig_space = orig_lamb[1:] - orig_lamb[:-1]
+    fin_space = fin_lamb[1:] - fin_lamb[:-1]
 
     if np.allclose(orig_space, orig_space[0]) and np.allclose(fin_space, fin_space[0]):
         logging.info("Re-sampling: original and final grids are uniform.")
