@@ -197,20 +197,30 @@ class Spectrum1D(OneDSpectrumMixin, NDDataRef):
 
     def resample(self, new_grid):
         """
-        Resample spectrum onto a new spectral axis grid.
+        Resample spectrum and uncertainties onto a new spectral axis grid.
 
         Parameters
         ----------
         new_grid : :class:`~astropy.units.Quantity`
             The new grid to resample the `Spectrum1D` object to.
         """
-        y = Resample(new_grid)(self.spectral_axis, self.flux)
+        resample = Resample(new_grid)
+        y = resample(self.spectral_axis, self.flux)
 
         # Preserve flux unit information
         y = u.Quantity(y.value, self.unit)
 
+        uncertainty = None
+
+        if self.uncertainty is not None:
+            uncertainty = resample(self.spectral_axis, self.uncertainty.array)
+
+            # # Preserve uncertainty class information
+            # uncertainty = self.uncertainty.__class__(uncertainty)
+
         return Spectrum1D(flux=y, spectral_axis=new_grid,
-                          spectral_axis_unit=self.wcs.spectral_axis_unit)
+                          spectral_axis_unit=self.wcs.spectral_axis_unit,
+                          uncertainty=uncertainty)
 
     def spectral_resolution(self, true_dispersion, delta_dispersion, axis=-1):
         """Evaluate the probability distribution of the spectral resolution.

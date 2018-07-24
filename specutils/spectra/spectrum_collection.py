@@ -1,8 +1,11 @@
-import numpy as np
-from .spectrum1d import Spectrum1D
-from astropy.units import Quantity
+import logging
 from collections import MutableSequence
-from astropy.nddata import NDIOMixin
+
+import astropy.units as u
+import numpy as np
+from astropy.nddata import NDIOMixin, NDUncertainty
+
+from .spectrum1d import Spectrum1D
 
 __all__ = ['SpectrumArray', 'SpectrumCollection']
 
@@ -51,9 +54,9 @@ class ResampleMixin:
         """
         if isinstance(grid, np.ndarray):
             resample_grid = grid
-        elif isinstance(grid, list) and len(grid) == len(self._items[0]):
+        elif isinstance(grid, list):
             resample_grid = np.array(grid)
-        elif isinstance(grid, (tuple, list)):
+        elif isinstance(grid, tuple):
             resample_grid = np.arange(*grid)
         else:
             if isinstance(grid, str) and len(self._items) > 0:
@@ -72,6 +75,10 @@ class ResampleMixin:
                         start_bin, end_bin, smallest_bin.value) * smallest_bin.unit
             else:
                 resample_grid = None
+
+        # Ensure the unit information of the resample grid
+        resample_grid = u.Quantity(resample_grid,
+                                   self._items[0].spectral_axis_unit)
 
         if resample_grid is not None:
             resampled_spectra = [x.resample(resample_grid) for x in self._items]
@@ -98,7 +105,7 @@ class SpectrumCollection(SpectrumArray, ResampleMixin, NDIOMixin):
     def __init__(self, items=[], output_grid=None):
         super(SpectrumCollection, self).__init__(items)
 
-        self._output_grid = output_grid or 'coarse'
+        self._output_grid = output_grid if output_grid is not None else 'coarse'
         self._resampled_grid, self._resampled_items = None, None
         self._evaluate_grids()
 
@@ -147,11 +154,23 @@ class SpectrumCollection(SpectrumArray, ResampleMixin, NDIOMixin):
         like a `Spectrum1D` object without having to manually provide
         transient attributes that match the `Spectrum1D` API.
         """
+        # TODO: currently, this method assumes that all uncertainties share
+        # the same uncertainty type.
         if hasattr(Spectrum1D, name):
             val = [getattr(x, name) for x in self._resampled_items]
 
-            if hasattr(val[0], 'unit'):
+            if name == 'uncertainty':
+                val = [x.array if val is not None else 0 for x in val]
+            elif hasattr(val[0], 'unit'):
                 val = np.vstack(np.array(val)) * val[0].unit
+
+            if name == 'uncertainty':
+                logging.info(
+                    "`SpectrumCollection` assumes that all "
+                    "spectra have the same uncertainty type.")
+
+                if self._items[0].uncertainty is not None:
+                    val = self._items[0].uncertainty.__class__(val)
 
             return val
 
