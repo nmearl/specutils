@@ -15,8 +15,9 @@ from ..registers import data_loader
 
 def identify_stis_fits(origin, *args, **kwargs):
     if isinstance(args[0], str) and (os.path.splitext(args[0].lower())[1] == '.fits'):
-        with fits.open(args[0]) as f:
-            return f[0].header.get('INSTRUME', '') == 'STIS'
+        with fits.open(args[0]) as hdulist:
+            return hdulist[0].header.get('INSTRUME', '') == 'STIS'
+            
     return False
 
 
@@ -49,10 +50,10 @@ def stis_fits(file_name, ext=1, sdqflags=None, weights=None, output_grid='fine',
     dirname, basename = os.path.split(file_name)
 
     search_for = [
-        os.path.join(dirname, basename.rsplit('_x1c.fits',1)[0] + '_flt.fits'),
-        os.path.join(dirname, basename.rsplit('_s1c.fits',1)[0] + '_flt.fits'),
-        os.path.join(dirname, basename.rsplit('_x1d.fits',1)[0] + '_flt.fits'),
-        os.path.join(dirname, basename.rsplit('_sx1.fits',1)[0] + '_flt.fits')
+        os.path.join(dirname, basename.rsplit('_x1c.fits', 1)[0] + '_flt.fits'),
+        os.path.join(dirname, basename.rsplit('_s1c.fits', 1)[0] + '_flt.fits'),
+        os.path.join(dirname, basename.rsplit('_x1d.fits', 1)[0] + '_flt.fits'),
+        os.path.join(dirname, basename.rsplit('_sx1.fits', 1)[0] + '_flt.fits')
     ]
 
     search_for.sort(key=len)
@@ -76,7 +77,7 @@ def stis_fits(file_name, ext=1, sdqflags=None, weights=None, output_grid='fine',
 
         if np.shape(tab['WAVELENGTH']) != np.shape(weights):
             raise ValueError("Dimensionality of (optional) 'weights' array must match "
-                            "WAVELENGTH/FLUX/ERROR/DQ arrays.")
+                             "WAVELENGTH/FLUX/ERROR/DQ arrays.")
 
     spectra = []
 
