@@ -68,16 +68,16 @@ array of values to use as the output; or as a three-tuple indiciating the
 start bin, end bin, and bin size.
 
 .. code:: python
-    >>> spec_coll = SpectrumCollection([spec1, spec2], output='fine')
-    >>> print(spec_coll.wavelength.shape)
-    (2, 24)
-    >>> spec_coll = SpectrumCollection([spec1, spec2], output='coarse')
+    >>> spec_coll = SpectrumCollection([spec1, spec2], output_grid='fine')
     >>> print(spec_coll.wavelength.shape)
     (2, 50)
-    >>> spec_coll = SpectrumCollection([spec1, spec2], output=(0, 30, 1))
+    >>> spec_coll = SpectrumCollection([spec1, spec2], output_grid='coarse')
+    >>> print(spec_coll.wavelength.shape)
+    (2, 24)
+    >>> spec_coll = SpectrumCollection([spec1, spec2], output_grid=(0, 30, 1))
     >>> print(spec_coll.wavelength.shape)
     (2, 30)
-    >>> spec_coll = SpectrumCollection([spec1, spec2], output=[0., 1.42857143, 2.85714286, 4.28571429, 5.71428571, 7.14285714, 8.57142857, 10.])
+    >>> spec_coll = SpectrumCollection([spec1, spec2], output_grid=[0., 1.42857143, 2.85714286, 4.28571429, 5.71428571, 7.14285714, 8.57142857, 10.])
     >>> print(spec_coll.wavelength.shape)
     (2, 8)
 

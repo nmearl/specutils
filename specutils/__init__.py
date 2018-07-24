@@ -14,7 +14,7 @@ import sys
 import os
 import logging
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.WARNING)
 
 # Load the default IO functions
 from .io.default_loaders import *  # noqa

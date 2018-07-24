@@ -7,7 +7,7 @@ import astropy.units as u
 __all__ = ['Resample']
 
 
-class Resample(object):
+class Resample:
     """
     Resample model which can be used with compound model objects.
     """
@@ -114,7 +114,7 @@ def _uniform_matrix(orig_lamb, fin_lamb):
         # This will only happen at the edges of lorig.
         # Discard resampled bin if it's not fully covered (> 99%) by the
         #  original bin -- only happens at the edges of the original bins
-        if 0 < dl.sum() < 0.99 * delta_fin.value:
+        if 0 < dl.sum() < 0.99 * delta_fin:
             dl = 0 * orig_lamb
 
         resamp_mat[i, :] = dl
