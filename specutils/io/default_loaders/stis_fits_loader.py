@@ -17,7 +17,7 @@ def identify_stis_fits(origin, *args, **kwargs):
     if isinstance(args[0], str) and (os.path.splitext(args[0].lower())[1] == '.fits'):
         with fits.open(args[0]) as hdulist:
             return hdulist[0].header.get('INSTRUME', '') == 'STIS'
-            
+
     return False
 
 
@@ -83,7 +83,9 @@ def stis_fits(file_name, ext=1, sdqflags=None, weights=None, output_grid='fine',
 
     for i in range(len(tab)):
         flags = tab[i]['DQ'] & sdqflags
-        uncertainty = StdDevUncertainty(tab[i]['ERROR']) #* u(header[1].data.columns['ERROR'].unit)
+        uncertainty = StdDevUncertainty(tab[i]['ERROR'],
+                                        #unit=u.Unit(header[1].data.columns['ERROR'].unit)
+                                        )
         wave = tab[i]['WAVELENGTH'] * u.Unit(wav_unit)
         flux = tab[i]['FLUX'] * u.Unit(data_unit)
         meta = {'header': header, 'sdqflags': sdqflags, 'flags': flags, 'dq': tab[i]['DQ'],

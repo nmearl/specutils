@@ -10,10 +10,9 @@ done by resampling the spectra onto a defined output grid.
 
     >>> from specutils import Spectrum1D, SpectrumCollection
     >>> import astropy.units as u
-    >>> spec1 = Spectrum1D(spectral_axis=np.linspace(0, 50, 50) * u.AA,
-    >>>                    flux=np.random.randn(50) * u.Jy)
-    >>> spec2 = Spectrum1D(spectral_axis=np.linspace(0, 50, 25) * u.AA,
-    >>>                    flux=np.random.randn(25) * u.Jy)
+    >>> import numpy as np
+    >>> spec1 = Spectrum1D(spectral_axis=np.linspace(0, 50, 50) * u.AA, flux=np.random.randn(50) * u.Jy)
+    >>> spec2 = Spectrum1D(spectral_axis=np.linspace(0, 50, 25) * u.AA, flux=np.random.randn(25) * u.Jy)
     >>> spec_coll = SpectrumCollection([spec1, spec2])
     >>> print(spec_coll.output_grid)
 
@@ -22,7 +21,7 @@ done by resampling the spectra onto a defined output grid.
     import matplotlib.pyplot as plt
     from specutils import Spectrum1D, SpectrumCollection
     import astropy.units as u
-    
+
     spec1 = Spectrum1D(spectral_axis=np.linspace(0, 50, 50) * u.AA,
                        flux=np.random.randn(50) * u.Jy)
     spec2 = Spectrum1D(spectral_axis=np.linspace(0, 50, 25) * u.AA,

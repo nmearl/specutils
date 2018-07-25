@@ -10,6 +10,7 @@ something like
 
 .. code-block:: python
 
+    >>> import numpy as np
     >>> from specutils import Spectrum1D
     >>> flux = np.random.sample(200)
     >>> wave = np.arange(1100, 1300)
@@ -43,7 +44,7 @@ encouraged to :doc:`create their own loader </custom_loading>`.
 
     >>> from specutils import Spectrum1D
 
-    >>> spec1d = Spectrum1D.read("/path/to/file.fits")
+    >>> spec1d = Spectrum1D.read("/path/to/file.fits") #doctest: +SKIP
 
 
 
