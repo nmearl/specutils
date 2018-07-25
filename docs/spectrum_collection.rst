@@ -1,12 +1,13 @@
-==================
+===================
 Spectrum Collection
-==================
+===================
 
 A spectrum collection is a way to keep a set of :class:`~specutils.Spectrum1D`
 objects together, regardless of their individual dispersion solutions. This is
 done by resampling the spectra onto a defined output grid.
 
 .. code:: python
+
     >>> from specutils import Spectrum1D, SpectrumCollection
     >>> import astropy.units as u
     >>> spec1 = Spectrum1D(spectral_axis=np.linspace(0, 50, 50) * u.AA,
@@ -17,7 +18,8 @@ done by resampling the spectra onto a defined output grid.
     >>> print(spec_coll.output_grid)
 
 .. plot::
-    import matplotlib as plt
+
+    import matplotlib.pyplot as plt
 
     f, (ax1, ax2) = plt.subplots(2, 1)
 
@@ -32,6 +34,7 @@ object will return an array whose type depends on the type of the attribute in
 the :class:`~specutils.Spectrum1D` object.
 
 .. code:: python
+
     >>> print(type(spec1.flux))
     astropy.units.quantity.Quantity
     >>> print(type(spec_coll.flux))
@@ -42,6 +45,7 @@ object will have shape ``(N, M)`` when ``N`` is the number of input spectra
 and ``M`` is the length of the output dispersion grid.
 
 .. code:: python
+
     >>> print(spec1.flux.shape)
     (25,)
     >>> print(spec_coll.flux.shape)
@@ -60,7 +64,7 @@ single spectrum, the user need only slice on the return array
 
 
 Defining output grids
---------------------
+---------------------
 
 Output grids can be defined one of three ways: as a string indicating whether
 to use the finest or coarsest sampling from the input spectra; an explicitly
@@ -68,6 +72,7 @@ array of values to use as the output; or as a three-tuple indiciating the
 start bin, end bin, and bin size.
 
 .. code:: python
+
     >>> spec_coll = SpectrumCollection([spec1, spec2], output_grid='fine')
     >>> print(spec_coll.wavelength.shape)
     (2, 50)

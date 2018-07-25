@@ -7,7 +7,7 @@ from astropy.nddata import NDIOMixin, NDUncertainty
 
 from .spectrum1d import Spectrum1D
 
-__all__ = ['SpectrumArray', 'SpectrumCollection']
+__all__ = ['SpectrumArray', 'SpectrumCollection', 'ResampleMixin']
 
 
 class SpectrumArray(MutableSequence):

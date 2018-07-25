@@ -9,14 +9,14 @@ Generating a spectrum object is quite easy. The simplest way would look
 something like
 
 .. code-block:: python
-    >>> from specutils import Spectrum1D
 
+    >>> from specutils import Spectrum1D
     >>> flux = np.random.sample(200)
     >>> wave = np.arange(1100, 1300)
-
     >>> spec1d = Spectrum1D(flux, spectral_axis=wave)
 
 .. plot::
+
     import numpy as np
     import matplotlib.pyplot as plt
 
@@ -38,9 +38,7 @@ encouraged to :doc:`create their own loader </custom_loading>`.
 .. code-block:: python
 
     >>> from specutils import Spectrum1D
-
     >>> spec1d = Spectrum1D.read("/path/to/file.fits")
-
 
 
 Spectra with Units
@@ -50,6 +48,7 @@ It's also possible to include units. This can be done either by passing in
 :class:`astropy.units.Quantity` arrays, or by specifying the units explicitly.
 
 .. code-block:: python
+
     >>> import numpy as np
     >>> import astropy.units as u
 
@@ -65,6 +64,7 @@ It's also possible to include units. This can be done either by passing in
     >>> spec1d = Spectrum1D(flux * u.Jy, spectral_axis=wave * u.AA)
 
 .. plot::
+
     import numpy as np
     import matplotlib.pyplot as plt
 
