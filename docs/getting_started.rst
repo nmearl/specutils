@@ -19,6 +19,10 @@ something like
 
     import numpy as np
     import matplotlib.pyplot as plt
+    from specutils import Spectrum1D
+    flux = np.random.sample(200)
+    wave = np.arange(1100, 1300)
+    spec1d = Spectrum1D(flux, spectral_axis=wave)
 
     f, ax = plt.subplots()
 
@@ -38,7 +42,9 @@ encouraged to :doc:`create their own loader </custom_loading>`.
 .. code-block:: python
 
     >>> from specutils import Spectrum1D
+
     >>> spec1d = Spectrum1D.read("/path/to/file.fits")
+
 
 
 Spectra with Units
@@ -51,22 +57,22 @@ It's also possible to include units. This can be done either by passing in
 
     >>> import numpy as np
     >>> import astropy.units as u
-
     >>> from specutils import Spectrum1D
-
     >>> flux = np.random.sample(200)
     >>> wave = np.arange(1100, 1300)
-
     >>> # Specifying units explicitly
     >>> spec1d = Spectrum1D(flux, spectral_axis=wave, unit=u.Jy, spectral_axis_unit=u.AA)
-
     >>> # Using astropy quantities
     >>> spec1d = Spectrum1D(flux * u.Jy, spectral_axis=wave * u.AA)
 
 .. plot::
 
-    import numpy as np
     import matplotlib.pyplot as plt
+    import numpy as np
+    import astropy.units as u
+    from specutils import Spectrum1D
+
+    spec1d = Spectrum1D(np.random.sample(200), spectral_axis=np.arange(1100, 1300), unit=u.Jy, spectral_axis_unit=u.AA)
 
     f, ax = plt.subplots()
 
@@ -101,7 +107,6 @@ Providing a FITSWCS
     >>> import astropy.wcs as fitswcs
     >>> import astropy.units as u
     >>> import numpy as np
-
     >>> my_wcs = fitswcs.WCS(header={'CDELT1': 1, 'CRVAL1': 6562.8, 'CUNIT1': 'Angstrom', 'CTYPE1': 'WAVE', 'RESTFRQ': 1400000000, 'CRPIX1': 25})
     >>> spec = Spectrum1D(flux=[5,6,7] * u.Jy, wcs=my_wcs)
     >>> spec.wavelength #doctest:+SKIP

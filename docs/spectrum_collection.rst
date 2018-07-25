@@ -20,6 +20,14 @@ done by resampling the spectra onto a defined output grid.
 .. plot::
 
     import matplotlib.pyplot as plt
+    from specutils import Spectrum1D, SpectrumCollection
+    import astropy.units as u
+    
+    spec1 = Spectrum1D(spectral_axis=np.linspace(0, 50, 50) * u.AA,
+                       flux=np.random.randn(50) * u.Jy)
+    spec2 = Spectrum1D(spectral_axis=np.linspace(0, 50, 25) * u.AA,
+                       flux=np.random.randn(25) * u.Jy)
+    spec_coll = SpectrumCollection([spec1, spec2])
 
     f, (ax1, ax2) = plt.subplots(2, 1)
 
@@ -41,7 +49,7 @@ the :class:`~specutils.Spectrum1D` object.
     astropy.units.quantity.Quantity
 
 The difference is their shape. The returned array from the :class:`~specutils.SpectrumCollection`
-object will have shape ``(N, M)`` when ``N`` is the number of input spectra
+object will have shape ``(N, M)`` where ``N`` is the number of input spectra
 and ``M`` is the length of the output dispersion grid.
 
 .. code:: python
@@ -59,6 +67,7 @@ in the case of e.g. ``WCS``). Therefore, to retrieve the resampled values of a
 single spectrum, the user need only slice on the return array
 
 .. code:: python
+
     >>> print(spec1.flux)  # Input spectrum values for flux
     >>> print(spec_coll.flux[0])  # Output spectrum values for flux
 
