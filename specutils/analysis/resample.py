@@ -111,7 +111,7 @@ def _uniform_matrix(orig_lamb, fin_lamb):
         # bin; negatives clipped
         dl = (l_sup - l_inf).clip(0)
 
-        # This will only happen at the edges of lorig.
+        # This will only happen at the edges of orig_lamb.
         # Discard resampled bin if it's not fully covered (> 99%) by the
         #  original bin -- only happens at the edges of the original bins
         if 0 < dl.sum() < 0.99 * delta_fin:
@@ -127,11 +127,11 @@ def _uniform_matrix(orig_lamb, fin_lamb):
 def _nonuniform_matrix(orig_lamb, fin_lamb, extrapolate=False):
     """
     Compute re-sampling matrix R_o2r, useful to convert a spectrum sampled at
-    wavelengths lorig to a new grid lresamp. Here, there is no necessity to
-    have constant gris as on :func:`_uniform_matrix`. This is adapted from code
+    wavelengths orig_lamb to a new grid fin_lamb. Here, there is no necessity to
+    have constant grids as on :func:`_uniform_matrix`. This is adapted from code
     created by the SEAGal Group.
 
-    .. warning:: lorig and lresam MUST be on ascending order!
+    .. warning:: orig_lamb and fin_lamb MUST be in ascending order!
 
     Parameters
     ----------
@@ -170,11 +170,10 @@ def _nonuniform_matrix(orig_lamb, fin_lamb, extrapolate=False):
 
     # Iterate over resampled fin_lamb vector
     for i in range(len(fin_lamb)):
-
         # Find in which bins fin_lamb bin within orig_lamb bin
         bins_resamp = np.where((lr_low[i] < lo_upp) & (lr_upp[i] > lo_low))[0]
 
-        # On these bins, eval fraction of resampled bin is within original bin.
+        # On these bins, evaluate fraction of resampled bin within original bin
         for j in bins_resamp:
             aux = 0
 
@@ -184,9 +183,7 @@ def _nonuniform_matrix(orig_lamb, fin_lamb, extrapolate=False):
             d_il = lr_upp[i] - lo_low[j]  # common section on the left
 
             # Case 1: resampling window is smaller than or equal to the
-            # original window. This is where the bug was: if an original bin
-            # is all inside the resampled bin, then all flux should go into it,
-            # not then d_lr/d_lo fraction.
+            # original window.
             if (lr_low[i] > lo_low[j]) & (lr_upp[i] < lo_upp[j]):
                 aux += 1.
 
