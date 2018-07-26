@@ -72,7 +72,7 @@ class ResampleMixin:
 
                 if grid == 'coarse':
                     largest_bin = max([np.max(np.diff(x.spectral_axis))
-                                    for x in self._items])
+                                       for x in self._items])
 
                     resample_grid = np.arange(
                         start_bin + largest_bin.value * 0.5,
@@ -87,9 +87,16 @@ class ResampleMixin:
                         end_bin + smallest_bin.value * 0.5,  # Ensure the inclusion of the last bin
                         smallest_bin.value)
                 elif grid == 'same':
-                    resample_grid = np.unique(
-                        np.concatenate(
-                            [x.spectral_axis.value for x in self._items]))
+                    bin_sizes = [np.mean((x.spectral_axis[1:] - x.spectral_axis[:-1]).value)
+                                 for x in self._items]
+
+                    if not np.allclose(bin_sizes[0], bin_sizes):
+                        raise Exception(
+                            "Bin sizes of all input spectra must be equal "
+                            "when using the 'same' output grid type.")
+
+                    resample_grid = np.sort(np.unique(np.concatenate(
+                        [x.spectral_axis.value for x in self._items])))
             else:
                 resample_grid = None
 
@@ -122,7 +129,7 @@ class SpectrumCollection(SpectrumArray, ResampleMixin, NDIOMixin):
     def __init__(self, items=[], output_grid=None):
         super(SpectrumCollection, self).__init__(items)
 
-        self._output_grid = output_grid if output_grid is not None else 'coarse'
+        self._output_grid = output_grid if output_grid is not None else 'same'
         self._resampled_grid, self._resampled_items = None, None
         self._evaluate_grids()
 

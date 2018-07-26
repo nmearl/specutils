@@ -68,6 +68,7 @@ single spectrum, the user need only slice on the return array
 .. code:: python
 
     >>> print(spec1.flux)  # Input spectrum values for flux
+    >>> print(spec_coll[0].flux)  # Input spectrum values for flux
     >>> print(spec_coll.flux[0])  # Output spectrum values for flux
 
 
@@ -75,9 +76,10 @@ Defining output grids
 ---------------------
 
 Output grids can be defined one of three ways: as a string indicating whether
-to use the finest or coarsest sampling from the input spectra; an explicitly
-array of values to use as the output; or as a three-tuple indiciating the
-start bin, end bin, and bin size.
+to use the finest or coarsest sampling from the input spectra, or the to indicate
+if all spectra should have the same dispersion grid (raising an exception if
+this is not the case); an explicit array of values to use as the output; or as
+a three-tuple indiciating the start bin, end bin, and bin size.
 
 .. code:: python
 
@@ -93,6 +95,11 @@ start bin, end bin, and bin size.
     >>> spec_coll = SpectrumCollection([spec1, spec2], output_grid=[0., 1.42857143, 2.85714286, 4.28571429, 5.71428571, 7.14285714, 8.57142857, 10.])
     >>> print(spec_coll.wavelength.shape)
     (2, 8)
+
+By default, the output grid is ``'same'``. This means that the
+:class:`~specutils.SpectrumCollection` will maintain the bin size of the
+spectra assuming they are all the same. Otherwise, an error will be raised
+indicating that there is variation in the bin sizes.
 
 
 Reference/API

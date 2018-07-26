@@ -1,5 +1,6 @@
 import astropy.units as u
 import numpy as np
+import pytest
 
 from ..spectra.spectrum1d import Spectrum1D
 from ..spectra.spectrum_collection import SpectrumCollection
@@ -20,13 +21,14 @@ def test_create_spectrum_collection():
     assert isinstance(sc.flux, u.Quantity)
     assert isinstance(sc.flux[0], u.Quantity)
 
-    # Force the output grid to be the finest available bin
     sc1 = SpectrumCollection([spec, spec1], output_grid='fine')
-    sc2 = SpectrumCollection([spec, spec1], output_grid='coarse')
-    sc3 = SpectrumCollection([spec, spec1], output_grid=(0, 30, 1))
-    sc4 = SpectrumCollection([spec, spec1], output_grid=[0., 1.42857143, 2.85714286, 4.28571429, 5.71428571, 7.14285714, 8.57142857, 10.])
+
+    with pytest.raises(Exception):
+        SpectrumCollection([spec, spec1], output_grid='same')
+
+    sc4 = SpectrumCollection([spec, spec1], output_grid=(0, 30, 1))
+    sc5 = SpectrumCollection([spec, spec1], output_grid=[0., 1.42857143, 2.85714286, 4.28571429, 5.71428571, 7.14285714, 8.57142857, 10.])
 
     assert sc1.flux.shape == (2, 50)
-    assert sc2.flux.shape == (2, 24)
-    assert sc3.flux.shape == (2, 30)
-    assert sc4.flux.shape == (2, 8)
+    assert sc4.flux.shape == (2, 30)
+    assert sc5.flux.shape == (2, 8)
