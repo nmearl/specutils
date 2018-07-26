@@ -73,13 +73,23 @@ class ResampleMixin:
                 if grid == 'coarse':
                     largest_bin = max([np.max(np.diff(x.spectral_axis))
                                     for x in self._items])
+
                     resample_grid = np.arange(
-                        start_bin, end_bin, largest_bin.value) * largest_bin.unit
+                        start_bin + largest_bin.value * 0.5,
+                        end_bin + largest_bin.value * 0.5,  # Ensure the inclusion of the last bin
+                        largest_bin.value)
                 elif grid == 'fine':
                     smallest_bin = min([np.min(np.diff(x.spectral_axis))
                                         for x in self._items])
+
                     resample_grid = np.arange(
-                        start_bin, end_bin, smallest_bin.value) * smallest_bin.unit
+                        start_bin + smallest_bin.value * 0.5,
+                        end_bin + smallest_bin.value * 0.5,  # Ensure the inclusion of the last bin
+                        smallest_bin.value)
+                elif grid == 'same':
+                    resample_grid = np.unique(
+                        np.concatenate(
+                            [x.spectral_axis.value for x in self._items]))
             else:
                 resample_grid = None
 
