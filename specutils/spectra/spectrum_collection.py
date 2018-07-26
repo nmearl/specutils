@@ -165,7 +165,7 @@ class SpectrumCollection(SpectrumArray, ResampleMixin, NDIOMixin):
         """
         return SpectrumCollection(self._items, output_grid=output_grid)
 
-    def __getattribute__(self, name):
+    def __getattr__(self, name):
         """
         This is a proxy function that forces `SpectrumCollection` to behave
         like a `Spectrum1D` object without having to manually provide
@@ -178,20 +178,19 @@ class SpectrumCollection(SpectrumArray, ResampleMixin, NDIOMixin):
 
             if name == 'uncertainty':
                 val = [x.array if val is not None else 0 for x in val]
-            elif hasattr(val[0], 'unit'):
-                val = np.vstack(np.array(val)) * val[0].unit
 
-            if name == 'uncertainty':
                 logging.info(
                     "`SpectrumCollection` assumes that all "
                     "spectra have the same uncertainty type.")
 
                 if self._items[0].uncertainty is not None:
                     val = self._items[0].uncertainty.__class__(val)
+            elif hasattr(val[0], 'unit'):
+                val = np.vstack(np.array(val)) * val[0].unit
 
             return val
 
-        return object.__getattribute__(self, name)
+        return object.__getattr__(self, name)
 
     def __repr__(self):
         return """<SpectrumCollection(size={})>""".format(len(self))
