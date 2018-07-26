@@ -60,8 +60,15 @@ class ResampleMixin:
             resample_grid = np.arange(*grid)
         else:
             if isinstance(grid, str) and len(self._items) > 0:
-                start_bin = min([x.spectral_axis[0] for x in self._items]).value
-                end_bin = max([x.spectral_axis[-1] for x in self._items]).value
+                # Get the left bin edges of the start and end bins
+                start_bin = min(
+                    [x.spectral_axis[0] -
+                     np.abs((x.spectral_axis[1] - x.spectral_axis[0]) * 0.5)
+                     for x in self._items]).value
+                end_bin = max(
+                    [x.spectral_axis[-1] -
+                     np.abs((x.spectral_axis[-1] - x.spectral_axis[-2]) * 0.5)
+                     for x in self._items]).value
 
                 if grid == 'coarse':
                     largest_bin = max([np.max(np.diff(x.spectral_axis))
