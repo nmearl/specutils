@@ -12,12 +12,11 @@ def test_create_spectrum_collection():
     spec1 = Spectrum1D(spectral_axis=np.linspace(0, 50, 25) * u.AA,
                        flux=np.random.randn(25) * u.Jy)
 
-    # By default, the output grid is defined by the coarsest bin
-    sc = SpectrumCollection([spec, spec1])
+    sc = SpectrumCollection([spec, spec1], output_grid='coarse')
 
     assert len(sc) == 2
     assert isinstance(sc[0], Spectrum1D)
-    assert sc.flux.shape == (2, 24)
+    assert sc.flux.shape == (2, 25)
     assert isinstance(sc.flux, u.Quantity)
     assert isinstance(sc.flux[0], u.Quantity)
 

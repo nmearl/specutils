@@ -23,7 +23,8 @@ def identify_stis_fits(origin, *args, **kwargs):
 
 @data_loader("stis-fits", identifier=identify_stis_fits,
              dtype=SpectrumCollection)
-def stis_fits(file_name, ext=1, sdqflags=None, weights=None, output_grid='fine', **kwargs):
+def stis_fits(file_name, ext=1, sdqflags=None, weights=None,
+              output_grid='fine', **kwargs):
     """
     Loads a STIS file containing multiple `Spectrum1D` objects and stores them
     in a `SpectrumCollection`.
@@ -99,4 +100,4 @@ def stis_fits(file_name, ext=1, sdqflags=None, weights=None, output_grid='fine',
             Spectrum1D(spectral_axis=wave, flux=flux,
                        uncertainty=uncertainty, meta=meta))
 
-    return SpectrumCollection(spectra)
+    return SpectrumCollection(spectra, output_grid=output_grid)

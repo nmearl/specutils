@@ -13,7 +13,7 @@ done by resampling the spectra onto a defined output grid.
     >>> import numpy as np
     >>> spec1 = Spectrum1D(spectral_axis=np.linspace(0, 50, 50) * u.AA, flux=np.random.randn(50) * u.Jy)
     >>> spec2 = Spectrum1D(spectral_axis=np.linspace(0, 50, 25) * u.AA, flux=np.random.randn(25) * u.Jy)
-    >>> spec_coll = SpectrumCollection([spec1, spec2])
+    >>> spec_coll = SpectrumCollection([spec1, spec2], output_grid='coarse')
     >>> print(spec_coll.output_grid)
 
 .. plot::
@@ -26,7 +26,7 @@ done by resampling the spectra onto a defined output grid.
                        flux=np.random.randn(50) * u.Jy)
     spec2 = Spectrum1D(spectral_axis=np.linspace(0, 50, 25) * u.AA,
                        flux=np.random.randn(25) * u.Jy)
-    spec_coll = SpectrumCollection([spec1, spec2])
+    spec_coll = SpectrumCollection([spec1, spec2], output_grid='coarse')
 
     f, (ax1, ax2) = plt.subplots(2, 1)
 
