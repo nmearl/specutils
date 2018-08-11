@@ -4,13 +4,8 @@ import gwcs
 import numpy as np
 import pytest
 
-from ..tests.spectral_examples import simulated_spectra
 from ..spectra.spectrum1d import Spectrum1D
-import astropy.units as u
-from ..analysis import equivalent_width, snr
-from ..manipulation import noise_region_uncertainty
-from ..spectra import SpectralRegion
-from astropy.nddata import StdDevUncertainty
+from ..analysis import equivalent_width
 
 
 def test_equivalent_width():
@@ -43,7 +38,7 @@ def test_snr(simulated_spectra):
     """
 
     np.random.seed(42)
-    
+
     #
     #  Set up the data and add the uncertainty and calculate the expected SNR
     #
@@ -192,7 +187,7 @@ def test_snr_single_region_with_noise_region(simulated_spectra):
 
     region = SpectralRegion(0.52*u.um, 0.59*u.um)
     noise_region = SpectralRegion(0.40*u.um, 0.45*u.um)
-    
+
     #
     #  Set up the data
     #

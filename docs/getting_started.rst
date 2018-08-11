@@ -10,19 +10,26 @@ something like
 
 .. code-block:: python
 
+    >>> import numpy as np
+    >>> from specutils import Spectrum1D
+    >>> flux = np.random.sample(200)
+    >>> wave = np.arange(1100, 1300)
+    >>> spec1d = Spectrum1D(flux, spectral_axis=wave)
+
+.. plot::
+
     import numpy as np
     import matplotlib.pyplot as plt
-
     from specutils import Spectrum1D
-
     flux = np.random.sample(200)
     wave = np.arange(1100, 1300)
-
     spec1d = Spectrum1D(flux, spectral_axis=wave)
 
-    plt.plot(spec1d.wavelength, spec1d.flux)
+    f, ax = plt.subplots()
 
-.. image:: img/quick_start.png
+    ax.plot(spec1d.wavelength, spec1d.flux)
+    ax.set_xlabel("Dispersion")
+    ax.set_ylabel("Flux")
 
 
 Reading from a File
@@ -35,9 +42,9 @@ encouraged to :doc:`create their own loader </custom_loading>`.
 
 .. code-block:: python
 
-    from specutils import Spectrum1D
+    >>> from specutils import Spectrum1D
 
-    spec1d = Spectrum1D.read("/path/to/file.fits")
+    >>> spec1d = Spectrum1D.read("/path/to/file.fits") #doctest: +SKIP
 
 
 
@@ -49,24 +56,30 @@ It's also possible to include units. This can be done either by passing in
 
 .. code-block:: python
 
-    import numpy as np
-    import matplotlib.pyplot as plt
-    import astropy.units as u
+    >>> import numpy as np
+    >>> import astropy.units as u
+    >>> from specutils import Spectrum1D
+    >>> flux = np.random.sample(200)
+    >>> wave = np.arange(1100, 1300)
+    >>> # Specifying units explicitly
+    >>> spec1d = Spectrum1D(flux, spectral_axis=wave, unit=u.Jy, spectral_axis_unit=u.AA)
+    >>> # Using astropy quantities
+    >>> spec1d = Spectrum1D(flux * u.Jy, spectral_axis=wave * u.AA)
 
+.. plot::
+
+    import matplotlib.pyplot as plt
+    import numpy as np
+    import astropy.units as u
     from specutils import Spectrum1D
 
-    flux = np.random.sample(200)
-    wave = np.arange(1100, 1300)
+    spec1d = Spectrum1D(np.random.sample(200), spectral_axis=np.arange(1100, 1300), unit=u.Jy, spectral_axis_unit=u.AA)
 
-    # Specifying units explicitly
-    spec1d = Spectrum1D(flux, spectral_axis=wave, unit=u.Jy, spectral_axis_unit=u.AA)
+    f, ax = plt.subplots()
 
-    # Using astropy quantities
-    spec1d = Spectrum1D(flux * u.Jy, spectral_axis=wave * u.AA)
-
-    plt.plot(spec1d.wavelength, spec1d.flux)
-
-.. image:: img/quick_start2.png
+    ax.plot(spec1d.wavelength, spec1d.flux)
+    ax.set_xlabel("Dispersion [{}]".format(spec1d.wavelength.unit))
+    ax.set_ylabel("Flux [{}]".format(spec1d.flux.unit))
 
 
 Defining WCS
@@ -95,7 +108,6 @@ Providing a FITSWCS
     >>> import astropy.wcs as fitswcs
     >>> import astropy.units as u
     >>> import numpy as np
-
     >>> my_wcs = fitswcs.WCS(header={'CDELT1': 1, 'CRVAL1': 6562.8, 'CUNIT1': 'Angstrom', 'CTYPE1': 'WAVE', 'RESTFRQ': 1400000000, 'CRPIX1': 25})
     >>> spec = Spectrum1D(flux=[5,6,7] * u.Jy, wcs=my_wcs)
     >>> spec.wavelength #doctest:+SKIP
@@ -139,8 +151,9 @@ to allow fast operations on collections of spectra that share the same
 name, this name scheme is meant to communicate the presence of a single
 common spectral axis.
 
-The case where each flux data array is related to a *different* spectral
-axis is currently **not** supported, but is planned for a later update.
+.. note:: The case where each flux data array is related to a *different* spectral
+          axis is encapsulated in the :class:`~specutils.SpectrumCollection`
+          object described in the :doc:`related docs </spectrum_collection>`.
 
 .. code-block:: python
 
