@@ -12,6 +12,11 @@ from scipy.signal import convolve
 import astropy.units as u
 from astropy.stats import sigma_clipped_stats
 
+from ..manipulation.utils import excise_regions
+from ..analysis import (fwhm, centroid, warn_continuum_below_threshold,
+                        gaussian_sigma_width)
+from ..utils import QuantityModel
+from ..manipulation import extract_region, noise_region_uncertainty
 from ..spectra.spectral_region import SpectralRegion
 from ..spectra.spectrum1d import Spectrum1D
 from ..utils import QuantityModel
