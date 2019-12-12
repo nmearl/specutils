@@ -171,6 +171,14 @@ class Spectrum1D(OneDSpectrumMixin, NDDataRef):
 
         return super().__getitem__(item)
 
+    @classmethod
+    def __from_nddata__(cls, new_data_object, input_data_object=None):
+        return cls(data=new_data_object.data,
+                   unit=new_data_object.unit,
+                   wcs=new_data_object.wcs,
+                   meta=new_data_object.meta,
+                   uncertainty=new_data_object.uncertainty)
+
     def _copy(self, **kwargs):
         """
         Peform deep copy operations on each attribute of the ``Spectrum1D``
