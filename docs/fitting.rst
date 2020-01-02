@@ -155,8 +155,8 @@ Then estimate the line  parameters it it for a Gaussian line profile::
       Outputs: ('y',)
       Model set size: 1
       Parameters:
-              amplitude            mean             stddev
-                  Jy                um                um
+              amplitude            mean              stddev
+                  Jy                um                 um
           ------------------ ---------------- -------------------
           1.1845669151078486 4.57517271067525 0.19373372929165977
 
